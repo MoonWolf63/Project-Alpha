@@ -1,14 +1,12 @@
 const Discord = require("discord.js");
 require('events').EventEmitter.defaultMaxListeners = 300;
 const client = new Discord.Client();
-const userID = "329756778025975809"
-const botID = "632689032115257416"
 const mysql = require('mysql');
 const settings = require('./config.json');
 const connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
-  password : 'Whocares99',
+  password : 'PASSWORD',
   database : 'projectalpha'
 });
 //Make sure you put your MYSQL data in or it the bot wont work
