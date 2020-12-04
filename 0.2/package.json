@@ -1,0 +1,31 @@
+{
+  "name": "project-alpha",
+  "version": "0.1",
+  "description": "A discord economy bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MoonWolf63/Project-Alpha"
+  },
+  "author": "MoonWolf63",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MoonWolf63/Project-Alpha/issues"
+  },
+  "homepage": "https://github.com/MoonWolf63/Project-Alpha#readme",
+  "dependencies": {
+    "@discordjs/opus": "^0.3.2",
+    "discord.js": "^12.2.0",
+    "ffmpeg": "0.0.4",
+    "fs": "0.0.1-security",
+    "mongodb": "^3.6.3",
+    "mysql": "^2.18.1",
+    "node-opus": "^0.3.3",
+    "node-pre-gyp": "^0.16.0",
+    "request": "^2.88.0",
+    "sqlite": "^4.0.17"
+  }
+}

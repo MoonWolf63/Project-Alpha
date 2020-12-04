@@ -10,6 +10,7 @@ Third, you must open index.js and add your MYSQL data to the list (I plan on lat
 
 ## Usage
 
+To start the bot, change directory to the bot directory and type node index.js
 To see your balance type the command fb!bal
 To try an gain some money type fb!crime (Careful! Theres a high risk of losing a lot!)
 
@@ -20,6 +21,14 @@ Bot Created
 Command Added: fb!bal
 
 Command Added fb!crime
+
+## Updates (V.0.2) 4.12.20
+
+Added fb!work which allows you to earn between 1 and 1000 euros
+
+Added fb!slots which is a slot machine with a payout between 1 and 50000 euros.
+
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
