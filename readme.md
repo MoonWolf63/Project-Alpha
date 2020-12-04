@@ -4,8 +4,9 @@ Project Alpha is a discord economy bot(Latest Discord.js Recommended)
 ## Installation
 
 To install this you must have NODEJS installed for it to properly work (SUGGESTED NODEJS VERSION: 12.18.2). You must also have a MYSQL server for user data, I suggest using xampp or ubuntu mysql.
-First you must open config.json and enter in your bot token.
-Second you must open index.js and add your MYSQL data to the list (I plan on later making the MYSQL data into a .json file)
+First, you must open config.json and enter in your bot token.
+Second, you must set up the database, if you are using xampp or at least phpmyadmin create the database. You can name the database what ever you want. After creating the database import the sql file in the sql folder. If you are using command line log in through mysql -u root(INSERT YOUR USERNAME IF ITS NOT ROOT). After that enter your password and type CREATE DATABASE DBNAME(Name it what ever you like); You must end it with a ; or it wont work. After doing that type exit; and type mysql -u root -p DBNAME(The name of the database that was created) < projectalpha.sql;.
+Third, you must open index.js and add your MYSQL data to the list (I plan on later making the MYSQL data into a .json file)
 
 ## Usage
 
