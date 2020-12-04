@@ -14,7 +14,7 @@ To start the bot, change directory to the bot directory and type node index.js
 To see your balance type the command fb!bal
 To try an gain some money type fb!crime (Careful! Theres a high risk of losing a lot!)
 
-## Updates (V.0.1)
+## Updates (V.0.1) 3.12.20
 
 Bot Created
 
