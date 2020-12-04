@@ -92,7 +92,7 @@ message.channel.send('Congrats, you won ' + euroreward + '€!');
             let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
       connection.query(sql4);
 let sql5  = 'UPDATE economy SET Balance = Balance-100 WHERE ID = ' + message.author.id + '';
-      connection,query(sql5);
+      connection.query(sql5);
 	  	console.log('User now has' + giveamount + '€');
 console.log('Awarded ' + euroreward + ' Euros!');
     }
