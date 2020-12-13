@@ -1,5 +1,5 @@
 # Project Alpha
-Project Alpha is a discord economy bot(Latest Discord.js Recommended)
+Project Alpha is a discord economy bot(Latest Discord.js Recommended). As of version 0.2 this bot offers a simple functional economy with the ability to work for money and the ability to do crime(NOT ACTUAL) for money. It also provides a slot machine with a nice payout(MAY SOON TO CHANGE PAYOUT RATE WITH UPCOMING UPDATES). The crime command provides great risk with a payout of 50K and a negative payout of 100K, will you take the risk?(MAY CHANGE).
 
 ## Installation
 
