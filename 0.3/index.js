@@ -8,7 +8,7 @@ const settings = require('./config.json');
 const connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
-  password : 'Whocares99',
+  password : 'DBPASSWORD',
   database : 'projectalpha'
 });
 //Make sure you put your MYSQL data in or it the bot wont work
