@@ -1,8 +1,6 @@
 const Discord = require("discord.js");
 require('events').EventEmitter.defaultMaxListeners = 300;
 const client = new Discord.Client();
-const userID = "329756778025975809"
-const botID = "632689032115257416"
 const mysql = require('mysql');
 const settings = require('./config.json');
 const connection = mysql.createConnection({
