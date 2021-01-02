@@ -28,6 +28,10 @@ Added fb!work which allows you to earn between 1 and 1000 euros
 
 Added fb!slots which is a slot machine with a payout between 1 and 50000 euros.
 
+## Updates (V.0.3) 1.1.21
+
+Bug fixes
+
 
 
 ## Contributing
