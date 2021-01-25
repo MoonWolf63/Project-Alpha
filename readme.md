@@ -13,6 +13,7 @@ Third, you must open index.js and add your MYSQL data to the list (I plan on lat
 To start the bot, change directory to the bot directory and type node index.js
 To see your balance type the command fb!bal
 To try an gain some money type fb!crime (Careful! Theres a high risk of losing a lot!)
+To go for a great chance type for fb!roulette
 
 ## Updates (V.0.1) 3.12.20
 
@@ -31,6 +32,10 @@ Added fb!slots which is a slot machine with a payout between 1 and 50000 euros.
 ## Updates (V.0.3) 1.1.21
 
 Bug fixes
+
+##Updates (V.0.4) 25.1.21
+
+Created a roulette command fb!roulette 
 
 
 
