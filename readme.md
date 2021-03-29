@@ -37,7 +37,9 @@ Bug fixes
 
 Created a roulette command fb!roulette 
 
+##Updates (V.0.5) 28.3.21
 
+Added embeds on each command for style
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
