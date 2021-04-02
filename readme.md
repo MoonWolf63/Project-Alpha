@@ -41,6 +41,16 @@ Created a roulette command fb!roulette
 
 Added embeds on each command for style
 
+##Updates (V.0.6) 1.4.21
+
+Added a bank system
+
+Added !with
+
+Added !dep
+
+Added embeds to all the commands for style.
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
