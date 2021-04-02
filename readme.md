@@ -33,15 +33,15 @@ Added fb!slots which is a slot machine with a payout between 1 and 50000 euros.
 
 Bug fixes
 
-##Updates (V.0.4) 25.1.21
+## Updates (V.0.4) 25.1.21
 
 Created a roulette command fb!roulette 
 
-##Updates (V.0.5) 28.3.21
+## Updates (V.0.5) 28.3.21
 
 Added embeds on each command for style
 
-##Updates (V.0.6) 1.4.21
+## Updates (V.0.6) 1.4.21
 
 Added a bank system
 
