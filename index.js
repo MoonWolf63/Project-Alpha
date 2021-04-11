@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const bigInt = require("big-integer");
 require('events').EventEmitter.defaultMaxListeners = 300;
 const client = new Discord.Client();
 const mysql = require('mysql');
@@ -59,7 +58,7 @@ client.on("message", (message) => {
 let b = connection.query("SELECT balance, bank FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
 	console.log(result); //Shows what result the query is getting
 if (Object.keys(result).length === 0) {
-	      let register ="INSERT INTO economy (ID, Balance, Bank) VALUES ('" + message.author.id + "', '0', '0');";
+	      let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
 		  connection.query(register)
 	  	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
@@ -104,7 +103,7 @@ console.log("bet success");
 let b = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
 	console.log(result); //Shows what result the query is getting
 if (Object.keys(result).length === 0) {
-	      let register ="INSERT INTO economy (ID, Balance, Bank) VALUES ('" + message.author.id + "', '0', '0');";
+	      let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
 		  connection.query(register)
 	  	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
@@ -112,14 +111,13 @@ if (Object.keys(result).length === 0) {
 	.setDescription("You do not have an account, one has been opened for you. Unfortunately this means you will not receive the winnings for this round.");
 	
 	message.channel.send(nullEmbed);
-} else if (args[1] > result[0].balance || args[1] < 0 || args[1] > 100000){
+} else if (args[1] > result[0].balance || args[1] < 0){
 		  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
 	.setTitle(message.author.username)
 	.setDescription("Insufficient Funds, You currently have: " + result[0].balance + "");
 	
 	message.channel.send(nullEmbed);
-	message.channel.send("Note: Max bet is 100000")
 } else {
 let roulette1 = Math.floor(Math.random() * (36-0)) + 0;
 	let roulette1Embed = new Discord.MessageEmbed()
@@ -406,7 +404,7 @@ client.on("message", (message) => {
 	  } else {
 let c = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
     if(result == 0) { 
-      let register ="INSERT INTO economy (ID, Balance, Bank) VALUES ('" + message.author.id + "', '0', '0');";
+      let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
       connection.query(register)
       	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
@@ -558,7 +556,7 @@ randomWork = work[Math.floor(Math.random() * work.length)];
 	message.channel.send(wonEmbed);
 let c = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
     if(result == 0) { 
-      let register ="INSERT INTO economy (ID, Balance, Bank) VALUES ('" + message.author.id + "', '0', '0');";
+      let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
       connection.query(register)
 	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
@@ -607,7 +605,7 @@ randomNumber1 = rand1[Math.floor(Math.random() * rand1.length)];
 
 let c = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
     if(result == 0) { 
-      let register ="INSERT INTO economy (ID, Balance, Bank) VALUES ('" + message.author.id + "', '0', '0');";
+      let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
       connection.query(register)
             	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
@@ -642,7 +640,7 @@ if (succesrate == '1'){
 	
 	let c = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
     if(result == 0) { 
-      let register ="INSERT INTO economy (ID, Balance, Bank) VALUES ('" + message.author.id + "', '0', '0');";
+      let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
       connection.query(register)
             	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
@@ -677,7 +675,7 @@ if (succesrate == '2'){
 	message.channel.send(wonEmbed);
 	let c = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
     if(result == 0) { 
-      let register ="INSERT INTO economy (ID, Balance, Bank) VALUES ('" + message.author.id + "', '0', '0');";
+      let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
       connection.query(register)
             	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
@@ -732,7 +730,7 @@ if (succesrate == '4'){
         }, 60000);
 	let c = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
     if(result == 0) { 
-      let register ="INSERT INTO economy (ID, Balance, Bank) VALUES ('" + message.author.id + "', '0', '0');";
+      let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
       connection.query(register)
            	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
@@ -789,7 +787,7 @@ const command = args.shift().toLowerCase();
 let b = connection.query("SELECT balance, bank FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
 	console.log(result); //Shows what result the query is getting
 if (Object.keys(result).length === 0) {
-	      let register ="INSERT INTO economy (ID, Balance, Bank) VALUES ('" + message.author.id + "', '0', '0');";
+	      let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
 		  connection.query(register)
 	  	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
@@ -831,7 +829,7 @@ const command = args.shift().toLowerCase();
 let b = connection.query("SELECT balance, bank FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
 	console.log(result); //Shows what result the query is getting
 if (Object.keys(result).length === 0) {
-	      let register ="INSERT INTO economy (ID, Balance, Bank) VALUES ('" + message.author.id + "', '0', '0');";
+	      let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
 		  connection.query(register)
 	  	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
@@ -867,6 +865,196 @@ if (Object.keys(result).length === 0) {
 })
   }
 });
+
+client.on("message", (message) => {
+	    const args = message.content.slice(prefix.length).trim().split(' ');
+const command = args.shift().toLowerCase();
+  if (!message.content.startsWith(prefix) || message.author.bot) {
+  } else if (command === 'give') {
+	if (!args.length) {
+		return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
+	}
+	if (message.mentions.members.size != 0){
+let b = connection.query("SELECT balance, bank FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
+	console.log(result); //Shows what result the query is getting
+if (Object.keys(result).length === 0) {
+	      let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
+		  connection.query(register)
+	  	  				let nullEmbed = new Discord.MessageEmbed()
+	.setColor('#800000')
+	.setTitle(message.author.username)
+	.setDescription("You do not have an account, one has been opened for you.");
+	
+	message.channel.send(nullEmbed);
+} else if (toFixed(args[1]) <= toFixed(result[0].balance)){
+	if (toFixed(args[1]) > 0){
+	console.log(toFixed(args[1]));
+	console.log(toFixed(result[0].balance));
+	let rembal = 'UPDATE economy SET Balance = Balance-' + args[1] + ' WHERE ID = ' + message.author.id + '';
+		connection.query(rembal);
+		let user = message.mentions.users.first();
+			let addbank = 'UPDATE economy SET Balance = Balance+' + args[1] + ' WHERE ID = ' + user.id + '';
+		connection.query(addbank);
+	let balEmbed = new Discord.MessageEmbed()
+	.setColor('#000099')
+	.setTitle(message.author.username)
+	.setDescription('Gave ' + args[1] + ' euros to ' + user.username + '')
+	
+	message.channel.send(balEmbed);
+	}
+}
+})
+  }
+  }
+});
+
+client.on("message", (message) => {
+	const args = message.content.slice(prefix.length).trim().split(' ');
+const command = args.shift().toLowerCase();
+if (!message.content.startsWith(prefix) || message.author.bot) {
+} else if (command === 'admingive') {
+	if (message.member.hasPermission("ADMINISTRATOR")){
+if (!args.length) {
+	return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
+}
+if (message.mentions.members.size != 0){
+let b = connection.query("SELECT balance, bank FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
+console.log(result); //Shows what result the query is getting
+if (Object.keys(result).length === 0) {
+	  let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
+	  connection.query(register)
+						let nullEmbed = new Discord.MessageEmbed()
+.setColor('#800000')
+.setTitle(message.author.username)
+.setDescription("You do not have an account, one has been opened for you.");
+
+message.channel.send(nullEmbed);
+} else if (toFixed(args[1]) <= toFixed(result[0].balance)){
+if (toFixed(args[1]) > 0){
+console.log(toFixed(args[1]));
+console.log(toFixed(result[0].balance));
+	let user = message.mentions.users.first();
+		let addbank = 'UPDATE economy SET Balance = Balance+' + args[1] + ' WHERE ID = ' + user.id + '';
+	connection.query(addbank);
+let balEmbed = new Discord.MessageEmbed()
+.setColor('#000099')
+.setTitle(message.author.username)
+.setDescription('Gave ' + args[1] + ' euros to ' + user.username + '')
+
+message.channel.send(balEmbed);
+}
+}
+})
+}
+} else {message.channel.send("You do not have permission to run this command!")
+}
+} else if (command === 'admintake') {
+	if (message.member.hasPermission("ADMINISTRATOR")){
+if (!args.length) {
+	return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
+}
+if (message.mentions.members.size != 0){
+let b = connection.query("SELECT balance, bank FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
+console.log(result); //Shows what result the query is getting
+if (Object.keys(result).length === 0) {
+	  let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
+	  connection.query(register)
+						let nullEmbed = new Discord.MessageEmbed()
+.setColor('#800000')
+.setTitle(message.author.username)
+.setDescription("That user does not have an account, one has been created for them.");
+
+message.channel.send(nullEmbed);
+} else if (toFixed(args[1]) <= toFixed(result[0].balance)){
+if (toFixed(args[1]) > 0){
+console.log(toFixed(args[1]));
+console.log(toFixed(result[0].balance));
+	let user = message.mentions.users.first();
+		let addbank = 'UPDATE economy SET Balance = Balance-' + args[1] + ' WHERE ID = ' + user.id + '';
+	connection.query(addbank);
+let balEmbed = new Discord.MessageEmbed()
+.setColor('#000099')
+.setTitle(message.author.username)
+.setDescription('Took ' + args[1] + ' euros from ' + user.username + '')
+
+message.channel.send(balEmbed);
+}
+}
+})
+}
+} else { message.channel.send("You do not have permission to run this command!")
+}
+}
+});
+
+client.on("message", (message) => {
+	const args = message.content.slice(prefix.length).trim().split(' ');
+const command = args.shift().toLowerCase();
+if (!message.content.startsWith(prefix) || message.author.bot) {
+} else if (command === 'give') {
+if (!args.length) {
+	return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
+}
+if (message.mentions.members.size != 0){
+let b = connection.query("SELECT balance, bank FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
+console.log(result); //Shows what result the query is getting
+if (Object.keys(result).length === 0) {
+	  let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
+	  connection.query(register)
+						let nullEmbed = new Discord.MessageEmbed()
+.setColor('#800000')
+.setTitle(message.author.username)
+.setDescription("That user does not have an account, one has been created for them.");
+
+message.channel.send(nullEmbed);
+} else if (toFixed(args[1]) <= toFixed(result[0].balance)){
+if (toFixed(args[1]) > 0){
+console.log(toFixed(args[1]));
+console.log(toFixed(result[0].balance));
+let rembal = 'UPDATE economy SET Balance = Balance-' + args[1] + ' WHERE ID = ' + message.author.id + '';
+	connection.query(rembal);
+	let user = message.mentions.users.first();
+		let addbank = 'UPDATE economy SET Balance = Balance+' + args[1] + ' WHERE ID = ' + user.id + '';
+	connection.query(addbank);
+let balEmbed = new Discord.MessageEmbed()
+.setColor('#000099')
+.setTitle(message.author.username)
+.setDescription('Gave ' + args[1] + ' euros to ' + user.username + '')
+
+message.channel.send(balEmbed);
+}
+}
+})
+}
+}
+});
+
+client.on("message", (message) => {
+	if (message.content.startsWith("!leaderboard")) {
+  let b = connection.query("SELECT * FROM economy ORDER BY Bank DESC;", function (err, result, fields){
+	if (Object.keys(result).length === 0) {
+		message.channel.send("Error! There are no current accounts!");
+	} else {
+		let userString = "";
+		Object.keys(result).forEach(function (key) {
+			let row = result[key];
+			let users = row.username + ': ' + row.Bank;
+			let usersarr = users.split("\n");
+			userString += `\n${usersarr}`;
+		});
+
+		let balEmbed = new Discord.MessageEmbed()
+		.setColor('#000099')
+		.setTitle('Leaderboard')
+		.setDescription(userString)
+		
+		message.channel.send(balEmbed);
+
+	}
+	  console.log(result); //Shows what result the query is getting
+  })
+	}
+  });
 
 client.login(settings.token);
 

@@ -51,6 +51,16 @@ Added !dep
 
 Added embeds to all the commands for style.
 
+## Updates (V.0.7) 10.4.21
+
+Added !admingive [@MENTION] [AMOUNT] and !admintake [@MENTION] [AMOUNT]
+
+Added !give [@MENTION] [AMOUNT]
+
+Added !leaderboard
+
+
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
