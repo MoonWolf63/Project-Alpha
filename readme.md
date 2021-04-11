@@ -15,6 +15,8 @@ To see your balance type the command fb!bal
 To try an gain some money type fb!crime (Careful! Theres a high risk of losing a lot!)
 To go for a great chance type for fb!roulette
 
+TO KEEP IT CONSTANTLY RUNNING DO npm install forever THEN TYPE forever index.js
+
 ## Updates (V.0.1) 3.12.20
 
 Bot Created
