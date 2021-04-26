@@ -1,5 +1,5 @@
 # Project Alpha
-Project Alpha is a discord economy bot(Latest Discord.js Recommended). As of version 0.2 this bot offers a simple functional economy with the ability to work for money and the ability to do crime(NOT ACTUAL) for money. It also provides a slot machine with a nice payout(MAY SOON TO CHANGE PAYOUT RATE WITH UPCOMING UPDATES). The crime command provides great risk with a payout of 50K and a negative payout of 100K, will you take the risk?(MAY CHANGE).
+Project Alpha is a discord economy bot(Latest Discord.js Recommended). As of version 0.2 this bot offers a simple functional economy with the ability to work for money and the ability to do crime(NOT ACTUAL) for money. It also provides a slot machine with a nice payout(MAY SOON TO CHANGE PAYOUT RATE WITH UPCOMING UPDATES). The crime command provides great risk with a payout of 5K and a negative payout of 8K, will you take the risk?(MAY CHANGE).
 
 ## Installation
 
@@ -12,7 +12,7 @@ Third, you must open index.js and add your MYSQL data to the list (I plan on lat
 
 To start the bot, change directory to the bot directory and type node index.js
 To see your balance type the command fb!bal
-To try an gain some money type fb!crime (Careful! Theres a high risk of losing a lot!)
+To try an gain some money type fb!crime (Careful! You can also lose money!)
 To go for a great chance type for fb!roulette
 
 TO KEEP IT CONSTANTLY RUNNING DO npm install forever THEN TYPE forever index.js
