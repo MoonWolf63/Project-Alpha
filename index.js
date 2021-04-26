@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+const bigInt = require("big-integer");
 require('events').EventEmitter.defaultMaxListeners = 300;
 const client = new Discord.Client();
 const mysql = require('mysql');
@@ -43,9 +44,15 @@ const column2 = [2,5,8,11,14,17,20,23,26,29,32,35];
 const column3 = [3,6,9,12,15,18,21,24,27,30,33,36];
 const totalbets = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','red','black','dozen1','dozen2','dozen3','even','odd','high','low','column1','column2','column3'];
 const jailed = new Set(); //This gives functionality to the crimed jailed part
-const crimedown = new Set(); //This adds the cooldown the the crime command
-const workdown = new Set(); //This adds the cooldown the the work command
-const slotdown = new Set(); //This adds the cooldown the the slots command
+const crimedown = new Set(); //This adds the cooldown to the crime command
+const workdown = new Set(); //This adds the cooldown to the work command
+const slotdown = new Set(); //This adds the cooldown to the slots command
+const bjdown = new Set(); //This adds the cooldown to the bj command
+const bj = new Set(); 
+var bjactive = false;
+var globalvalue = 0
+var dealervalue = 0
+var moneyvalue = 0
 client.on("ready", () => {
   console.log("I am ready!");
 });
@@ -62,18 +69,22 @@ if (Object.keys(result).length === 0) {
 		  connection.query(register)
 	  	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You do not have an account, one has been opened for you.");
 	
 	message.channel.send(nullEmbed);
 } else {
 	let balEmbed = new Discord.MessageEmbed()
 	.setColor('#000099')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.addFields(
-	{ name: ':euro: Euros', value: result[0].balance },
-		{ name: ':bank: Bank', value : result[0].bank}
+	{ name: ':euro: Euros', value: result[0].balance, inline: true },
+		{ name: ':bank: Bank', value : result[0].bank, inline: true }
 		)
+		.setTimestamp()
+		.setFooter('Project Alpha');
 	
 	message.channel.send(balEmbed);
 }
@@ -91,7 +102,8 @@ if (command === 'roulette') {
 		  if(jailed.has(message.author.id)){
 	let jailEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You have been jailed, please wait 5 minutes from the jailing to continue");
 	message.channel.send(jailEmbed);
 	  } else {
@@ -107,14 +119,16 @@ if (Object.keys(result).length === 0) {
 		  connection.query(register)
 	  	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You do not have an account, one has been opened for you. Unfortunately this means you will not receive the winnings for this round.");
 	
 	message.channel.send(nullEmbed);
 } else if (args[1] > result[0].balance || args[1] < 0){
 		  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("Insufficient Funds, You currently have: " + result[0].balance + "");
 	
 	message.channel.send(nullEmbed);
@@ -122,7 +136,8 @@ if (Object.keys(result).length === 0) {
 let roulette1 = Math.floor(Math.random() * (36-0)) + 0;
 	let roulette1Embed = new Discord.MessageEmbed()
 	.setColor('#000099')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription('The number is: ' + roulette1 + '');
 	
 	message.channel.send(roulette1Embed);
@@ -131,7 +146,8 @@ if (args[0] = 'red'){
 		let roulette1 = Math.floor(Math.random() * (36-0)) + 0;
 	let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Won " + args[1] * 2 + "");
 	
 	message.channel.send(wonEmbed);
@@ -140,7 +156,8 @@ if (args[0] = 'red'){
 	} else {
 					let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Lost!");
 	
 	message.channel.send(lostEmbed);
@@ -151,7 +168,8 @@ if (args[0] = 'red'){
 	if (black.includes(roulette1) == true){
 			let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Won " + args[1] * 2 + "");
 	
 	message.channel.send(wonEmbed);
@@ -160,7 +178,8 @@ if (args[0] = 'red'){
 	} else {
 					let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Lost!");
 	
 	message.channel.send(lostEmbed);
@@ -171,7 +190,8 @@ if (args[0] = 'red'){
 	if (dozen1.includes(roulette1) == true){
 			let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Won " + args[1] * 3 + "");
 	
 	message.channel.send(wonEmbed);
@@ -180,7 +200,8 @@ if (args[0] = 'red'){
 	} else {
 					let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Lost!");
 	
 	message.channel.send(lostEmbed);
@@ -191,7 +212,8 @@ if (args[0] = 'red'){
 	if (dozen2.includes(roulette1) == true){
 			let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Won " + args[1] * 3 + "");
 	
 	message.channel.send(wonEmbed);
@@ -200,7 +222,8 @@ if (args[0] = 'red'){
 	} else {
 					let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Lost!");
 	
 	message.channel.send(lostEmbed);
@@ -211,7 +234,8 @@ if (args[0] = 'red'){
 	if (dozen3.includes(roulette1) == true){
 			let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Won " + args[1] * 3 + "");
 	
 	message.channel.send(wonEmbed);
@@ -220,7 +244,8 @@ if (args[0] = 'red'){
 	} else {
 					let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Lost!");
 	
 	message.channel.send(lostEmbed);
@@ -231,7 +256,8 @@ if (args[0] = 'red'){
 	if (even.includes(roulette1) == true){
 			let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Won " + args[1] * 2 + "");
 	
 	message.channel.send(wonEmbed);
@@ -240,7 +266,8 @@ if (args[0] = 'red'){
 	} else {
 					let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Lost!");
 	
 	message.channel.send(lostEmbed);
@@ -251,7 +278,8 @@ if (args[0] = 'red'){
 	if (odd.includes(roulette1) == true){
 			let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Won " + args[1] * 2 + "");
 	
 	message.channel.send(wonEmbed);;
@@ -260,7 +288,8 @@ if (args[0] = 'red'){
 	} else {
 					let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Lost!");
 	
 	message.channel.send(lostEmbed);
@@ -271,7 +300,8 @@ if (args[0] = 'red'){
 	if (low.includes(roulette1) == true){
 			let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Won " + args[1] * 2 + "");
 	
 	message.channel.send(wonEmbed);
@@ -280,7 +310,8 @@ if (args[0] = 'red'){
 	} else {
 					let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Lost!");
 	
 	message.channel.send(lostEmbed);
@@ -291,7 +322,8 @@ if (args[0] = 'red'){
 	if (high.includes(roulette1) == true){
 			let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Won " + args[1] * 2 + "");
 	
 	message.channel.send(wonEmbed);
@@ -300,7 +332,8 @@ if (args[0] = 'red'){
 	} else {
 					let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Lost!");
 	
 	message.channel.send(lostEmbed);
@@ -311,7 +344,8 @@ if (args[0] = 'red'){
 	if (column1.includes(roulette1) == true){
 			let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Won " + args[1] * 3 + "");
 	
 	message.channel.send(wonEmbed);
@@ -320,7 +354,8 @@ if (args[0] = 'red'){
 	} else {
 					let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Lost!");
 	
 	message.channel.send(lostEmbed);
@@ -331,7 +366,8 @@ if (args[0] = 'red'){
 	if (column2.includes(roulette1) == true){
 			let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Won " + args[1] * 3 + "");
 	
 	message.channel.send(wonEmbed);
@@ -340,7 +376,8 @@ if (args[0] = 'red'){
 	} else {
 					let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Lost!");
 	
 	message.channel.send(lostEmbed);
@@ -351,7 +388,8 @@ if (args[0] = 'red'){
 	if (column3.includes(roulette1) == true){
 			let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Won " + args[1] * 3 + "");
 	
 	message.channel.send(wonEmbed);
@@ -360,7 +398,8 @@ if (args[0] = 'red'){
 	} else {
 			let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Lost!");
 	
 	message.channel.send(lostEmbed);
@@ -370,7 +409,8 @@ if (args[0] = 'red'){
 } else if (args[0] = roulette1){
 		let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You Won " + args[1] * 35 + "");
 	
 	message.channel.send(wonEmbed);
@@ -392,13 +432,15 @@ client.on("message", (message) => {
 	  	  if(jailed.has(message.author.id)){
 	let jailEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You have been jailed, please wait 5 minutes from the jailing to continue");
 	message.channel.send(jailEmbed);
 	  } else if (slotdown.has(message.author.id)) {
 		  	let coolEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("Please wait 1 minute before using this command again");
 	message.channel.send(coolEmbed);
 	  } else {
@@ -408,14 +450,16 @@ let c = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.au
       connection.query(register)
       	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You do not have an account, one has been opened for you. Unfortunately this means you will not receive the winnings for this round.");
 	
 	message.channel.send(nullEmbed);
     } else if (result[0].balance < 100){
 				  				let jailEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("Insufficient Funds, You currently have: " + result[0].balance + "");
 	
 	message.channel.send(jailEmbed);
@@ -430,10 +474,14 @@ let c = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.au
 let slots1 = Math.floor(Math.random() * (3-0)) + 0;
 let slots2 = Math.floor(Math.random() * (3-0)) + 0;
 let slots3 = Math.floor(Math.random() * (3-0)) + 0;
+let slots4 = Math.floor(Math.random() * (3-0)) + 0;
+let slots5 = Math.floor(Math.random() * (3-0)) + 0;
 
 var slot1VAR = 'NULL';
 var slot2VAR = 'NULL';
 var slot3VAR ='NULL';
+var slot4VAR = 'NULL';
+var slot5VAR ='NULL';
 
 if (slots1 == '0'){
 slot1VAR = '🍎';
@@ -468,17 +516,41 @@ slot3VAR = '🍋';
 console.log('Yellow');
 }
 
+if (slots4 == '0'){
+	slot4VAR = '🍎';
+	console.log('Red');
+	} else if (slots4 == '1'){
+	slot4VAR = '🍊';
+	console.log('Orange');
+	} else if (slots4 == '2'){
+	slot4VAR = '🍋';
+	console.log('Yellow');
+	}
+
+	if (slots5 == '0'){
+		slot5VAR = '🍎';
+		console.log('Red');
+		} else if (slots5 == '1'){
+		slot5VAR = '🍊';
+		console.log('Orange');
+		} else if (slots5 == '2'){
+		slot5VAR = '🍋';
+		console.log('Yellow');
+		}
+
 		let slotEmbed = new Discord.MessageEmbed()
 	.setColor('#000099')
-	.setTitle(message.author.username)
-	.setDescription(slot1VAR + ' ' + slot2VAR + ' ' + slot3VAR);
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription(slot1VAR + ' ' + slot2VAR + ' ' + slot3VAR + ' ' + slot4VAR + ' ' + slot5VAR);
 	
 	message.channel.send(slotEmbed);
-if (slots1 == '0' && slots2 == '0' && slots3 == '0'){
-let euroreward = Math.floor(Math.random() * (50001)) + 0;
+if (slots1 == '0' && slots2 == '0' && slots3 == '0' && slots4 == '0' && slots5 == '0'){
+let euroreward = Math.floor(Math.random() * (100001)) + 0;
 			let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("Congrats, you won " + euroreward + "€!");
 	
 	message.channel.send(wonEmbed);
@@ -491,11 +563,12 @@ let sql5  = 'UPDATE economy SET Balance = Balance-100 WHERE ID = ' + message.aut
 console.log('Awarded ' + euroreward + ' Euros!');
     }
 
-if (slots1 == '1' && slots2 == '1' && slots3 == '1'){
-let euroreward = Math.floor(Math.random() * (50001)) + 0;
+if (slots1 == '1' && slots2 == '1' && slots3 == '1' && slots4 == '1' && slots5 == '1'){
+let euroreward = Math.floor(Math.random() * (40001)) + 0;
 			let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("Congrats, you won " + euroreward + "€!");
 	
 	message.channel.send(wonEmbed);
@@ -505,11 +578,12 @@ let euroreward = Math.floor(Math.random() * (50001)) + 0;
 	  	console.log('User now has' + giveamount + '€');
 console.log('Awarded ' + euroreward + ' Euros!');
 }
-if (slots1 == '2' && slots2 == '2' && slots3 == '2'){
-let euroreward = Math.floor(Math.random() * (50001)) + 0;
+if (slots1 == '2' && slots2 == '2' && slots3 == '2' && slots4 == '2' && slots5 == '2'){
+let euroreward = Math.floor(Math.random() * (40001)) + 0;
 			let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("Congrats, you won " + euroreward + "€!");
 	
 	message.channel.send(wonEmbed);
@@ -519,6 +593,141 @@ let euroreward = Math.floor(Math.random() * (50001)) + 0;
 	  	console.log('User now has' + giveamount + '€');
 console.log('Awarded ' + euroreward + ' Euros!');
 }
+if (slots1 != '0' && slots2 == '0' && slots3 == '0' && slots4 == '0' && slots5 != '0'){
+	let euroreward = Math.floor(Math.random() * (20001)) + 0;
+				let wonEmbed = new Discord.MessageEmbed()
+		.setColor('#009933')
+		.setAuthor(message.author.username)
+		.setThumbnail(message.author.avatarURL({ dynamic:true }))
+		.setDescription("Congrats, you won " + euroreward + "€!");
+		
+		message.channel.send(wonEmbed);
+		let giveamount = result[0].balance + 25;
+				let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+		  connection.query(sql4);
+			  console.log('User now has' + giveamount + '€');
+	console.log('Awarded ' + euroreward + ' Euros!');
+	}
+	if (slots1 != '1' && slots2 == '1' && slots3 == '1' && slots4 == '1' && slots5 != '1'){
+		let euroreward = Math.floor(Math.random() * (20001)) + 0;
+					let wonEmbed = new Discord.MessageEmbed()
+			.setColor('#009933')
+			.setAuthor(message.author.username)
+			.setThumbnail(message.author.avatarURL({ dynamic:true }))
+			.setDescription("Congrats, you won " + euroreward + "€!");
+			
+			message.channel.send(wonEmbed);
+			let giveamount = result[0].balance + 25;
+					let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+			  connection.query(sql4);
+				  console.log('User now has' + giveamount + '€');
+		console.log('Awarded ' + euroreward + ' Euros!');
+		}
+		if (slots1 != '2' && slots2 == '2' && slots3 == '2' && slots4 == '2' && slots5 != '2'){
+			let euroreward = Math.floor(Math.random() * (20001)) + 0;
+						let wonEmbed = new Discord.MessageEmbed()
+				.setColor('#009933')
+				.setAuthor(message.author.username)
+				.setThumbnail(message.author.avatarURL({ dynamic:true }))
+				.setDescription("Congrats, you won " + euroreward + "€!");
+				
+				message.channel.send(wonEmbed);
+				let giveamount = result[0].balance + 25;
+						let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+				  connection.query(sql4);
+					  console.log('User now has' + giveamount + '€');
+			console.log('Awarded ' + euroreward + ' Euros!');
+			}
+			if (slots1 == '0' && slots2 == '0' && slots3 == '0' && slots4 != '0'){
+				let euroreward = Math.floor(Math.random() * (20001)) + 0;
+							let wonEmbed = new Discord.MessageEmbed()
+					.setColor('#009933')
+					.setAuthor(message.author.username)
+					.setThumbnail(message.author.avatarURL({ dynamic:true }))
+					.setDescription("Congrats, you won " + euroreward + "€!");
+					
+					message.channel.send(wonEmbed);
+					let giveamount = result[0].balance + 25;
+							let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+					  connection.query(sql4);
+						  console.log('User now has' + giveamount + '€');
+				console.log('Awarded ' + euroreward + ' Euros!');
+				}
+				if (slots1 == '1' && slots2 == '1' && slots3 == '1' && slots4 != '1'){
+					let euroreward = Math.floor(Math.random() * (20001)) + 0;
+								let wonEmbed = new Discord.MessageEmbed()
+						.setColor('#009933')
+						.setAuthor(message.author.username)
+						.setThumbnail(message.author.avatarURL({ dynamic:true }))
+						.setDescription("Congrats, you won " + euroreward + "€!");
+						
+						message.channel.send(wonEmbed);
+						let giveamount = result[0].balance + 25;
+								let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+						  connection.query(sql4);
+							  console.log('User now has' + giveamount + '€');
+					console.log('Awarded ' + euroreward + ' Euros!');
+					}
+					if (slots1 == '2' && slots2 == '2' && slots3 == '2' && slots4 != '2'){
+						let euroreward = Math.floor(Math.random() * (20001)) + 0;
+									let wonEmbed = new Discord.MessageEmbed()
+							.setColor('#009933')
+							.setAuthor(message.author.username)
+							.setThumbnail(message.author.avatarURL({ dynamic:true }))
+							.setDescription("Congrats, you won " + euroreward + "€!");
+							
+							message.channel.send(wonEmbed);
+							let giveamount = result[0].balance + 25;
+									let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+							  connection.query(sql4);
+								  console.log('User now has' + giveamount + '€');
+						console.log('Awarded ' + euroreward + ' Euros!');
+						}
+						if (slots2 != '0' && slots3 == '0' && slots4 == '0' && slots5 == '0'){
+							let euroreward = Math.floor(Math.random() * (20001)) + 0;
+										let wonEmbed = new Discord.MessageEmbed()
+								.setColor('#009933')
+								.setAuthor(message.author.username)
+								.setThumbnail(message.author.avatarURL({ dynamic:true }))
+								.setDescription("Congrats, you won " + euroreward + "€!");
+								
+								message.channel.send(wonEmbed);
+								let giveamount = result[0].balance + 25;
+										let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+								  connection.query(sql4);
+									  console.log('User now has' + giveamount + '€');
+							console.log('Awarded ' + euroreward + ' Euros!');
+							}
+							if (slots2 != '1' && slots3 == '1' && slots4 == '1' && slots5 == '1'){
+								let euroreward = Math.floor(Math.random() * (20001)) + 0;
+											let wonEmbed = new Discord.MessageEmbed()
+									.setColor('#009933')
+									.setAuthor(message.author.username)
+									.setThumbnail(message.author.avatarURL({ dynamic:true }))
+									.setDescription("Congrats, you won " + euroreward + "€!");
+									
+									message.channel.send(wonEmbed);
+									let giveamount = result[0].balance + 25;
+											let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+									  connection.query(sql4);
+										  console.log('User now has' + giveamount + '€');
+								console.log('Awarded ' + euroreward + ' Euros!');
+								}
+								if (slots2 != '2' && slots3 == '2' && slots4 == '2' && slots5 == '2'){
+									let euroreward = Math.floor(Math.random() * (20001)) + 0;
+												let wonEmbed = new Discord.MessageEmbed()
+										.setColor('#009933')
+										.setAuthor(message.author.username)
+										.setThumbnail(message.author.avatarURL({ dynamic:true }))
+										.setDescription("Congrats, you won " + euroreward + "€!");
+										
+										message.channel.send(wonEmbed);
+										let giveamount = result[0].balance + 25;
+												let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+										  connection.query(sql4);
+											  console.log('User now has' + giveamount + '€');
+									console.log('Awarded ' + euroreward + ' Euros!');
+									}
 }
 });
 }
@@ -530,13 +739,15 @@ client.on("message", (message) => {
 	  	  if(jailed.has(message.author.id)){
 	let jailEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You have been jailed, please wait 5 minutes from the jailing to continue");
 	message.channel.send(jailEmbed);
 	  } else if (workdown.has(message.author.id)) {
 		  	let coolEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("Please wait 1 minute before using this command again");
 	message.channel.send(coolEmbed);
 	  } else {
@@ -550,7 +761,8 @@ randomWork = work[Math.floor(Math.random() * work.length)];
         }, 60000);
 				let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription(randomWork + euroreward + "€");
 	
 	message.channel.send(wonEmbed);
@@ -560,7 +772,8 @@ let c = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.au
       connection.query(register)
 	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You do not have an account, one has been opened for you. Unfortunately this means you will not receive the winnings for this round.");
 	
 	message.channel.send(nullEmbed);
@@ -581,13 +794,15 @@ client.on("message", (message) => {
 	  if(jailed.has(message.author.id)){
 	let jailEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You have been jailed, please wait 5 minutes from the jailing to continue");
 	message.channel.send(jailEmbed);
 	  } else if(crimedown.has(message.author.id)){
 	let jailEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("Please wait 1 minute before using this command again");
 	message.channel.send(jailEmbed);
 	  } else {
@@ -598,7 +813,8 @@ if (succesrate == '0'){
 randomNumber1 = rand1[Math.floor(Math.random() * rand1.length)];
 					let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription(randomNumber1);
 	
 	message.channel.send(wonEmbed);
@@ -609,7 +825,8 @@ let c = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.au
       connection.query(register)
             	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You do not have an account, one has been opened for you. Unfortunately this means you will not receive the winnings for this round.");
 	
 	message.channel.send(nullEmbed);
@@ -633,7 +850,8 @@ if (succesrate == '1'){
 	randomNumber2 = rand2[Math.floor(Math.random() * rand2.length)];
 					let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription(randomNumber2);
 	
 	message.channel.send(wonEmbed);
@@ -644,7 +862,8 @@ if (succesrate == '1'){
       connection.query(register)
             	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You do not have an account, one has been opened for you. Unfortunately this means you will not receive the winnings for this round.");
 	
 	message.channel.send(nullEmbed);
@@ -669,7 +888,8 @@ if (succesrate == '2'){
 	randomNumber3 = rand3[Math.floor(Math.random() * rand3.length)];
 						let wonEmbed = new Discord.MessageEmbed()
 	.setColor('#009933')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription(randomNumber3 + euroreward + "€");
 	
 	message.channel.send(wonEmbed);
@@ -679,7 +899,8 @@ if (succesrate == '2'){
       connection.query(register)
             	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You do not have an account, one has been opened for you. Unfortunately this means you will not receive the winnings for this round.");
 	
 	message.channel.send(nullEmbed);
@@ -703,7 +924,8 @@ if (succesrate == '3'){
 	randomNumber4 = rand4[Math.floor(Math.random() * rand4.length)];
 							let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription(randomNumber4);
 	
 	message.channel.send(lostEmbed);
@@ -719,7 +941,8 @@ if (succesrate == '4'){
 	var euroreward2 = Math.floor(Math.random() *(7001)) + 0;
 								let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription(randomNumber5 + euroreward2 + "€");
 	
 	message.channel.send(lostEmbed);
@@ -734,7 +957,8 @@ if (succesrate == '4'){
       connection.query(register)
            	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You do not have an account, one has been opened for you. Unfortunately this means you will not receive the winnings for this round.");
 	
 	message.channel.send(nullEmbed);
@@ -757,7 +981,8 @@ if (succesrate == '5'){
 	randomnumber6 = rand6[Math.floor(Math.random() * rand6.length)];
         							let lostEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription(randomnumber6);
 	
 	message.channel.send(lostEmbed);
@@ -791,7 +1016,8 @@ if (Object.keys(result).length === 0) {
 		  connection.query(register)
 	  	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You do not have an account, one has been opened for you.");
 	
 	message.channel.send(nullEmbed);
@@ -802,14 +1028,16 @@ if (Object.keys(result).length === 0) {
 		connection.query(addbank);
 	let balEmbed = new Discord.MessageEmbed()
 	.setColor('#000099')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription('Deposited ' + args[0] + ' euros into your bank!')
 	
 	message.channel.send(balEmbed);
 } else { 
 		  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("Insufficient Funds, You currently have: " + result[0].balance + "");
 	
 	message.channel.send(nullEmbed);
@@ -833,7 +1061,8 @@ if (Object.keys(result).length === 0) {
 		  connection.query(register)
 	  	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You do not have an account, one has been opened for you.");
 	
 	message.channel.send(nullEmbed);
@@ -847,7 +1076,8 @@ if (Object.keys(result).length === 0) {
 		connection.query(addbank);
 	let balEmbed = new Discord.MessageEmbed()
 	.setColor('#000099')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription('Withdrawn ' + args[0] + ' euros from your bank!')
 	
 	message.channel.send(balEmbed);
@@ -857,7 +1087,8 @@ if (Object.keys(result).length === 0) {
 	console.log(toFixed(result[0].bank));
 		  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("Insufficient Funds, You currently have: " + result[0].bank + "");
 	
 	message.channel.send(nullEmbed);
@@ -882,7 +1113,8 @@ if (Object.keys(result).length === 0) {
 		  connection.query(register)
 	  	  				let nullEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription("You do not have an account, one has been opened for you.");
 	
 	message.channel.send(nullEmbed);
@@ -897,13 +1129,14 @@ if (Object.keys(result).length === 0) {
 		connection.query(addbank);
 	let balEmbed = new Discord.MessageEmbed()
 	.setColor('#000099')
-	.setTitle(message.author.username)
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 	.setDescription('Gave ' + args[1] + ' euros to ' + user.username + '')
 	
 	message.channel.send(balEmbed);
 	}
 }
-})
+});
   }
   }
 });
@@ -925,11 +1158,12 @@ if (Object.keys(result).length === 0) {
 	  connection.query(register)
 						let nullEmbed = new Discord.MessageEmbed()
 .setColor('#800000')
-.setTitle(message.author.username)
+.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 .setDescription("You do not have an account, one has been opened for you.");
 
 message.channel.send(nullEmbed);
-} else if (toFixed(args[1]) <= toFixed(result[0].balance)){
+} else if (toFixed(args[1]) > 0){
 if (toFixed(args[1]) > 0){
 console.log(toFixed(args[1]));
 console.log(toFixed(result[0].balance));
@@ -937,14 +1171,24 @@ console.log(toFixed(result[0].balance));
 		let addbank = 'UPDATE economy SET Balance = Balance+' + args[1] + ' WHERE ID = ' + user.id + '';
 	connection.query(addbank);
 let balEmbed = new Discord.MessageEmbed()
-.setColor('#000099')
-.setTitle(message.author.username)
-.setDescription('Gave ' + args[1] + ' euros to ' + user.username + '')
+	.setColor('#000099')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('Gave ' + args[1] + ' euros to ' + user.username + ' as admin!')
 
 message.channel.send(balEmbed);
+console.log(user)
+console.log(toFixed(args[1]));
+console.log(toFixed(result[0].balance));
+} else {
+	console.log("AdminGive Failed: Amount must not be below 0!")
 }
+} else {
+	console.log("AdminGive Failed: Account Error!")
 }
 })
+} else {
+	console.log("AdminGive Failed: Member Error!");
 }
 } else {message.channel.send("You do not have permission to run this command!")
 }
@@ -961,7 +1205,8 @@ if (Object.keys(result).length === 0) {
 	  connection.query(register)
 						let nullEmbed = new Discord.MessageEmbed()
 .setColor('#800000')
-.setTitle(message.author.username)
+.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 .setDescription("That user does not have an account, one has been created for them.");
 
 message.channel.send(nullEmbed);
@@ -974,7 +1219,8 @@ console.log(toFixed(result[0].balance));
 	connection.query(addbank);
 let balEmbed = new Discord.MessageEmbed()
 .setColor('#000099')
-.setTitle(message.author.username)
+.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 .setDescription('Took ' + args[1] + ' euros from ' + user.username + '')
 
 message.channel.send(balEmbed);
@@ -1003,7 +1249,8 @@ if (Object.keys(result).length === 0) {
 	  connection.query(register)
 						let nullEmbed = new Discord.MessageEmbed()
 .setColor('#800000')
-.setTitle(message.author.username)
+.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 .setDescription("That user does not have an account, one has been created for them.");
 
 message.channel.send(nullEmbed);
@@ -1018,7 +1265,8 @@ let rembal = 'UPDATE economy SET Balance = Balance-' + args[1] + ' WHERE ID = ' 
 	connection.query(addbank);
 let balEmbed = new Discord.MessageEmbed()
 .setColor('#000099')
-.setTitle(message.author.username)
+.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
 .setDescription('Gave ' + args[1] + ' euros to ' + user.username + '')
 
 message.channel.send(balEmbed);
@@ -1056,14 +1304,201 @@ client.on("message", (message) => {
 	}
   });
 
+  client.on("message", (message) => {
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	
+	const args = message.content.slice(prefix.length).trim().split(' ');
+	const command = args.shift().toLowerCase();
+	
+	if (command === 'bj') {
+			  if(jailed.has(message.author.id)){
+	  let jailEmbed = new Discord.MessageEmbed()
+	  .setColor('#800000')
+	  .setAuthor(message.author.username)
+	  .setThumbnail(message.author.avatarURL({ dynamic:true }))
+	  .setDescription("You have been jailed, please wait 5 minutes from the jailing to continue");
+	  message.channel.send(jailEmbed);
+		} else if (bjdown.has(message.author.id)) {
+				let coolEmbed = new Discord.MessageEmbed()
+	  .setColor('#800000')
+	  .setAuthor(message.author.username)
+	  .setThumbnail(message.author.avatarURL({ dynamic:true }))
+	  .setDescription("Please wait 1 minute before using this command again");
+	  message.channel.send(coolEmbed);
+		} else {
+  let c = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
+	  if(result == 0) { 
+		let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
+		connection.query(register)
+							  let nullEmbed = new Discord.MessageEmbed()
+	  .setColor('#800000')
+	  .setAuthor(message.author.username)
+	  .setThumbnail(message.author.avatarURL({ dynamic:true }))
+	  .setDescription("You do not have an account, one has been opened for you. Unfortunately this means you will not receive the winnings for this round.");
+	  
+	  message.channel.send(nullEmbed);
+	  } else if (result[0].balance < args[0] && result[0].balance < 0){
+									let jailEmbed = new Discord.MessageEmbed()
+	  .setColor('#800000')
+	  .setAuthor(message.author.username)
+	  .setThumbnail(message.author.avatarURL({ dynamic:true }))
+	  .setDescription("Insufficient Funds, You currently have: " + result[0].balance + "");
+	  
+	  message.channel.send(jailEmbed);
+	  } else if (bjactive == false && args[0] > 0 && result[0].balance >= args[0]) {
+		bj.add(message.author.id);
+		bjactive = true
+		console.log("BlackJack Active!")
+
+		let success = 'UPDATE economy SET Balance = Balance-' + args[0] + ' WHERE ID = ' + message.author.id + '';
+connection.query(success)
+let number = Math.floor(Math.random() * (21-0)) + 0;
+let dealer = Math.floor(Math.random() * (21-0)) + 0;
+let balEmbed = new Discord.MessageEmbed()
+.setColor('#000099')
+.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+.setDescription('Your number: ' + (number + 1) + '');
+
+message.channel.send(balEmbed);
+globalvalue = (number + 1)
+console.log(globalvalue);
+dealervalue = (dealer + 1)
+moneyvalue = args[0];
+bjdown.add(message.author.id);
+        setTimeout(() => {
+          // Removes the user from the set after a minute
+          bjdown.delete(message.author.id);
+        }, 60000);
+
+  }
+  });
+  }
+	}
+  });
+
+  client.on("message", (message) => {
+	if (message.content.startsWith("hit")) {
+  let b = connection.query("SELECT balance, bank FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
+	  console.log(result); //Shows what result the query is getting
+  if (Object.keys(result).length === 0) {
+			let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
+			connection.query(register)
+							  let nullEmbed = new Discord.MessageEmbed()
+	  .setColor('#800000')
+	  .setAuthor(message.author.username)
+	  .setThumbnail(message.author.avatarURL({ dynamic:true }))
+	  .setDescription("You do not have an account, one has been opened for you.");
+	  
+	  message.channel.send(nullEmbed);
+  } else if(bjactive == true && bj.has(message.author.id)) {
+	let number = Math.floor(Math.random() * (11-0)) + 0;
+	globalvalue = globalvalue + (number + 1)
+	let balEmbed = new Discord.MessageEmbed()
+.setColor('#000099')
+.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+.setDescription('New total: ' + globalvalue + '');
+message.channel.send(balEmbed);
+if (globalvalue > 21){
+	bjactive = false;
+	bj.delete(message.author.id);
+	let balEmbed = new Discord.MessageEmbed()
+	.setColor('#800000')
+	.setAuthor(message.author.username)
+		.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('Busted!');
+	message.channel.send(balEmbed);
+	globalvalue = 0;
+	dealervalue = 0;
+	moneyvalue = 0;
+
+}
+
+  }
+  })
+	}
+  });
+
+  client.on("message", (message) => {
+	if (message.content.startsWith("stand")) {
+  let b = connection.query("SELECT balance, bank FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
+	  console.log(result); //Shows what result the query is getting
+  if (Object.keys(result).length === 0) {
+			let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
+			connection.query(register)
+							  let nullEmbed = new Discord.MessageEmbed()
+	  .setColor('#800000')
+	  .setAuthor(message.author.username)
+	  .setThumbnail(message.author.avatarURL({ dynamic:true }))
+	  .setDescription("You do not have an account, one has been opened for you.");
+	  
+	  message.channel.send(nullEmbed);
+  } else if(bjactive == true && bj.has(message.author.id)) {
+while (bjactive == true){
+	let dealer = Math.floor(Math.random() * (11-0)) + 0;
+	dealervalue = dealervalue + (dealer + 1);
+	if (dealervalue > 21){
+		console.log(dealervalue)
+		let balEmbed = new Discord.MessageEmbed()
+		.setColor('#000099')
+		.setAuthor(message.author.username)
+			.setThumbnail(message.author.avatarURL({ dynamic:true }))
+		.setDescription('Dealer: ' + globalvalue + '');
+		message.channel.send(balEmbed);
+		let wonEmbed = new Discord.MessageEmbed()
+		.setColor('#009933')
+		.setAuthor(message.author.username)
+		.setThumbnail(message.author.avatarURL({ dynamic:true }))
+		.setDescription('Dealer Busts at ' + dealervalue + '! You won ' + (moneyvalue * 3) + '!');
+		
+		message.channel.send(wonEmbed);
+		let addbank = 'UPDATE economy SET Balance = Balance+' + (moneyvalue * 3) + ' WHERE ID = ' + message.author.id + '';
+		connection.query(addbank);
+		bjactive = false;
+		bj.delete(message.author.id);
+		globalvalue = 0;
+		dealervalue = 0;
+		moneyvalue = 0;
+	} else if(dealervalue > globalvalue){
+		console.log("dealer won!");
+		let wonEmbed = new Discord.MessageEmbed()
+		.setColor('#800000')
+		.setAuthor(message.author.username)
+		.setThumbnail(message.author.avatarURL({ dynamic:true }))
+		.setDescription('Dealer at: ' + dealervalue + ', User Loses!');
+		
+		message.channel.send(wonEmbed);
+		bjactive = false;
+		bj.delete(message.author.id);
+		globalvalue = 0;
+		dealervalue = 0;
+		moneyvalue = 0;
+	} else if (dealervalue > globalvalue && dealervalue != 21){
+		console.log("Dealer Won");
+		let wonEmbed = new Discord.MessageEmbed()
+		.setColor('#800000')
+		.setAuthor(message.author.username)
+		.setThumbnail(message.author.avatarURL({ dynamic:true }))
+		.setDescription('Dealer at: ' + dealervalue + ', User Loses!');
+		
+		message.channel.send(wonEmbed);
+		bjactive = false;
+		bj.delete(message.author.id);
+		globalvalue = 0;
+		dealervalue = 0;
+		moneyvalue = 0;
+	} else {
+		console.log(moneyvalue)
+		console.log(dealervalue)
+		console.log(globalvalue)
+	}
+}
+  }
+  })
+	}
+  });
+
+
+
 client.login(settings.token);
-
-
-
-
-
-
-
-
-
-

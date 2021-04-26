@@ -61,6 +61,19 @@ Added !give [@MENTION] [AMOUNT]
 
 Added !leaderboard
 
+## Updates (V.0.8) 26.4.21
+
+Added !bj (blackjack)
+
+Added hit
+
+Added stand
+
+To play bj type !bj [betamount] then either type hit or stand without prefix.
+
+Fixed some bugs
+
+Fixed admingive
 
 
 ## Contributing
