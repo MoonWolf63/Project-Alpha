@@ -75,6 +75,14 @@ Fixed some bugs
 
 Fixed admingive
 
+## Updates (V.0.9)
+
+Bug Fixes
+
+Fixed give command
+
+Added variable prefix to all commands instead of just some commands
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

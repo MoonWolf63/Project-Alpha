@@ -61,7 +61,7 @@ connection.connect(function(err, result) {
 });
 
 client.on("message", (message) => {
-  if (message.content.startsWith("!bal")) {
+  if (message.content.startsWith(prefix + "bal")) {
 let b = connection.query("SELECT balance, bank FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
 	console.log(result); //Shows what result the query is getting
 if (Object.keys(result).length === 0) {
@@ -428,7 +428,7 @@ if (args[0] = 'red'){
 
 
 client.on("message", (message) => {
-  if (message.content.startsWith("!slots")) {
+  if (message.content.startsWith(prefix + "slots")) {
 	  	  if(jailed.has(message.author.id)){
 	let jailEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
@@ -735,7 +735,7 @@ if (slots1 != '0' && slots2 == '0' && slots3 == '0' && slots4 == '0' && slots5 !
 });
 
 client.on("message", (message) => {
-  if (message.content.startsWith("!work")) {
+  if (message.content.startsWith(prefix + "work")) {
 	  	  if(jailed.has(message.author.id)){
 	let jailEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
@@ -790,7 +790,7 @@ let c = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.au
 });
 
 client.on("message", (message) => {
-  if (message.content.startsWith("!crime")) {
+  if (message.content.startsWith(prefix + "crime")) {
 	  if(jailed.has(message.author.id)){
 	let jailEmbed = new Discord.MessageEmbed()
 	.setColor('#800000')
@@ -1237,7 +1237,7 @@ client.on("message", (message) => {
 	const args = message.content.slice(prefix.length).trim().split(' ');
 const command = args.shift().toLowerCase();
 if (!message.content.startsWith(prefix) || message.author.bot) {
-} else if (command === 'give') {
+if (command === 'give') {
 if (!args.length) {
 	return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
 }
@@ -1273,6 +1273,7 @@ message.channel.send(balEmbed);
 }
 }
 })
+}
 }
 }
 });
@@ -1450,10 +1451,10 @@ while (bjactive == true){
 		.setColor('#009933')
 		.setAuthor(message.author.username)
 		.setThumbnail(message.author.avatarURL({ dynamic:true }))
-		.setDescription('Dealer Busts at ' + dealervalue + '! You won ' + (moneyvalue * 3) + '!');
+		.setDescription('Dealer Busts at ' + dealervalue + '! You won ' + (moneyvalue * 2) + '!');
 		
 		message.channel.send(wonEmbed);
-		let addbank = 'UPDATE economy SET Balance = Balance+' + (moneyvalue * 3) + ' WHERE ID = ' + message.author.id + '';
+		let addbank = 'UPDATE economy SET Balance = Balance+' + (moneyvalue * 2) + ' WHERE ID = ' + message.author.id + '';
 		connection.query(addbank);
 		bjactive = false;
 		bj.delete(message.author.id);
