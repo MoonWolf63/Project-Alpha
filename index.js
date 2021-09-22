@@ -1,4 +1,28 @@
 const Discord = require("discord.js");
+const fs = require('fs');
+const horses = [1, 2, 3, 4, 5, 6];
+const shop = './shop/';
+const horsenames = ["Scarlette", "Bambi", "Eclipse", "Winky", "Barbado","Lavarson","Exterminator","Foxy","Risky Business", "Tabby Cat", "Dont Bother", "Lost Cause", "Minecraft", "Why should I", "Clinton","Firefly","Murder","Twinkle Eyes","Munich","Berlin","Coppenhagen","Your Worst Nightmare","Hay Bale","War Crimes"];
+var horse1 = null;
+var horse2 = null;
+var horse3 = null;
+var horse4 = null;
+var horse5 = null;
+var horse6 = null;
+var horse1name = null;
+var horse2name = null;
+var horse3name = null;
+var horse4name = null;
+var horse5name = null;
+var horse6name = null;
+var horse1odd = null;
+var horse2odd = null;
+var horse3odd = null;
+var horse4odd = null;
+var horse5odd = null;
+var horse6odd = null;
+var horseshuff = "null";
+const shops = ['backgrounds'];
 const bigInt = require("big-integer");
 require('events').EventEmitter.defaultMaxListeners = 300;
 const client = new Discord.Client();
@@ -28,6 +52,45 @@ const connection = mysql.createConnection({
   password : 'DBPASSWORD',
   database : 'projectalpha'
 });
+function shufflehorses(){
+	console.log("Shuffling Horses");
+	horseshuff = horses.sort(() => Math.random() - 0.5);
+	horse1 = horseshuff[0];
+	horse2 = horseshuff[1];
+	horse3 = horseshuff[2];
+	horse4 = horseshuff[3];
+	horse5 = horseshuff[4];
+	horse6 = horseshuff[5];
+	horse1name = horsenames[Math.floor(Math.random() * horsenames.length)];
+	horse2name = horsenames[Math.floor(Math.random() * horsenames.length)];
+	horse3name = horsenames[Math.floor(Math.random() * horsenames.length)];
+	horse4name = horsenames[Math.floor(Math.random() * horsenames.length)];
+	horse5name = horsenames[Math.floor(Math.random() * horsenames.length)];
+	horse6name = horsenames[Math.floor(Math.random() * horsenames.length)];
+	horse1odd = ( Math.floor(Math.random() * ((horseshuff[0] * 10)-1)) + 0);
+	horse2odd = ( Math.floor(Math.random() * ((horseshuff[1] * 10)-1)) + 0);
+	horse3odd = ( Math.floor(Math.random() * ((horseshuff[2] * 10)-1)) + 0);
+	horse4odd = ( Math.floor(Math.random() * ((horseshuff[3] * 10)-1)) + 0);
+	horse5odd = ( Math.floor(Math.random() * ((horseshuff[4] * 10)-1)) + 0);
+	horse6odd = ( Math.floor(Math.random() * ((horseshuff[5] * 10)-1)) + 0);
+	console.log(horse1);
+	console.log(horse2);
+	console.log(horse3);
+	console.log(horse4);
+	console.log(horse5);
+	console.log(horse6);
+	console.log(horse1name);
+	console.log(horse2name);
+	console.log(horse3name);
+	console.log(horse4name);
+	console.log(horse5name);
+	console.log(horse1odd);
+	console.log(horse2odd);
+	console.log(horse3odd);
+	console.log(horse4odd);
+	console.log(horse5odd);
+	console.log(horse6odd);
+}
 //Make sure you put your MYSQL data in or it the bot wont work
 
 const red = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,29,32,34,36];
@@ -43,18 +106,21 @@ const column1 = [1,4,7,10,13,16,19,22,25,28,31,34];
 const column2 = [2,5,8,11,14,17,20,23,26,29,32,35];
 const column3 = [3,6,9,12,15,18,21,24,27,30,33,36];
 const totalbets = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','red','black','dozen1','dozen2','dozen3','even','odd','high','low','column1','column2','column3'];
+const totalhorses = ['1','2','3','4','5','6'];
 const jailed = new Set(); //This gives functionality to the crimed jailed part
 const crimedown = new Set(); //This adds the cooldown to the crime command
 const workdown = new Set(); //This adds the cooldown to the work command
 const slotdown = new Set(); //This adds the cooldown to the slots command
 const bjdown = new Set(); //This adds the cooldown to the bj command
 const bj = new Set(); 
+const horsedown = new Set();
 var bjactive = false;
 var globalvalue = 0
 var dealervalue = 0
 var moneyvalue = 0
 client.on("ready", () => {
   console.log("I am ready!");
+shufflehorses();
 });
 connection.connect(function(err, result) {
 	console.log("Ready for your command!");
@@ -728,6 +794,96 @@ if (slots1 != '0' && slots2 == '0' && slots3 == '0' && slots4 == '0' && slots5 !
 											  console.log('User now has' + giveamount + '€');
 									console.log('Awarded ' + euroreward + ' Euros!');
 									}
+									if (slots1 == '0' && slots2 == '0' && slots3 == '0' && slots4 == '0' && slots5 != '0'){
+										let euroreward = Math.floor(Math.random() * (15001)) + 0;
+													let wonEmbed = new Discord.MessageEmbed()
+											.setColor('#009933')
+											.setAuthor(message.author.username)
+											.setThumbnail(message.author.avatarURL({ dynamic:true }))
+											.setDescription("Congrats, you won " + euroreward + "€!");
+											
+											message.channel.send(wonEmbed);
+											let giveamount = result[0].balance + 25;
+													let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+											  connection.query(sql4);
+												  console.log('User now has' + giveamount + '€');
+										console.log('Awarded ' + euroreward + ' Euros!');
+										}
+										if (slots1 == '1' && slots2 == '1' && slots3 == '1' && slots4 == '1' && slots5 != '1'){
+											let euroreward = Math.floor(Math.random() * (20001)) + 0;
+														let wonEmbed = new Discord.MessageEmbed()
+												.setColor('#009933')
+												.setAuthor(message.author.username)
+												.setThumbnail(message.author.avatarURL({ dynamic:true }))
+												.setDescription("Congrats, you won " + euroreward + "€!");
+												
+												message.channel.send(wonEmbed);
+												let giveamount = result[0].balance + 25;
+														let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+												  connection.query(sql4);
+													  console.log('User now has' + giveamount + '€');
+											console.log('Awarded ' + euroreward + ' Euros!');
+											}
+											if (slots1 == '2' && slots2 == '2' && slots3 == '2' && slots4 == '2' && slots5 != '2'){
+												let euroreward = Math.floor(Math.random() * (20001)) + 0;
+															let wonEmbed = new Discord.MessageEmbed()
+													.setColor('#009933')
+													.setAuthor(message.author.username)
+													.setThumbnail(message.author.avatarURL({ dynamic:true }))
+													.setDescription("Congrats, you won " + euroreward + "€!");
+													
+													message.channel.send(wonEmbed);
+													let giveamount = result[0].balance + 25;
+															let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+													  connection.query(sql4);
+														  console.log('User now has' + giveamount + '€');
+												console.log('Awarded ' + euroreward + ' Euros!');
+												}
+												if (slots1 != '0' && slots2 == '0' && slots3 == '0' && slots4 == '0' && slots5 == '0'){
+													let euroreward = Math.floor(Math.random() * (20001)) + 0;
+																let wonEmbed = new Discord.MessageEmbed()
+														.setColor('#009933')
+														.setAuthor(message.author.username)
+														.setThumbnail(message.author.avatarURL({ dynamic:true }))
+														.setDescription("Congrats, you won " + euroreward + "€!");
+														
+														message.channel.send(wonEmbed);
+														let giveamount = result[0].balance + 25;
+																let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+														  connection.query(sql4);
+															  console.log('User now has' + giveamount + '€');
+													console.log('Awarded ' + euroreward + ' Euros!');
+													}
+													if (slots1 != '1' && slots2 == '1' && slots3 == '1' && slots4 == '1' && slots5 == '1'){
+														let euroreward = Math.floor(Math.random() * (20001)) + 0;
+																	let wonEmbed = new Discord.MessageEmbed()
+															.setColor('#009933')
+															.setAuthor(message.author.username)
+															.setThumbnail(message.author.avatarURL({ dynamic:true }))
+															.setDescription("Congrats, you won " + euroreward + "€!");
+															
+															message.channel.send(wonEmbed);
+															let giveamount = result[0].balance + 25;
+																	let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+															  connection.query(sql4);
+																  console.log('User now has' + giveamount + '€');
+														console.log('Awarded ' + euroreward + ' Euros!');
+														}
+														if (slots1 != '2' && slots2 == '2' && slots3 == '2' && slots4 == '2' && slots5 == '2'){
+															let euroreward = Math.floor(Math.random() * (20001)) + 0;
+																		let wonEmbed = new Discord.MessageEmbed()
+																.setColor('#009933')
+																.setAuthor(message.author.username)
+																.setThumbnail(message.author.avatarURL({ dynamic:true }))
+																.setDescription("Congrats, you won " + euroreward + "€!");
+																
+																message.channel.send(wonEmbed);
+																let giveamount = result[0].balance + 25;
+																		let sql4 = 'UPDATE economy SET Balance = Balance+' + euroreward + ' WHERE ID = ' + message.author.id + '';
+																  connection.query(sql4);
+																	  console.log('User now has' + giveamount + '€');
+															console.log('Awarded ' + euroreward + ' Euros!');
+															}
 }
 });
 }
@@ -788,6 +944,27 @@ let c = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.au
 }
   }
 });
+//horses
+client.on("message", (message) => {
+	if (message.content.startsWith(prefix + "horses")) {
+		if(jailed.has(message.author.id)){
+	  let jailEmbed = new Discord.MessageEmbed()
+	  .setColor('#800000')
+	  .setAuthor(message.author.username)
+	  .setThumbnail(message.author.avatarURL({ dynamic:true }))
+	  .setDescription("You have been jailed, please wait 5 minutes from the jailing to continue");
+	  message.channel.send(jailEmbed);
+		} else {
+			let horsesemb = new Discord.MessageEmbed()
+			.setColor('#800000')
+			.setAuthor(message.author.username)
+			.setThumbnail(message.author.avatarURL({ dynamic:true }))
+			.setDescription("1. " + horse1name + " - Odds: " + horse1odd + "-1.\n2. " + horse2name + " - Odds: " + horse2odd + "-1.\n3. " + horse3name + " - Odds: " + horse3odd + "-1.\n4. " + horse4name + " - Odds: " + horse4odd + "-1.\n5. " + horse5name + " - Odds: " + horse5odd + "-1.\n6. " + horse6name + " - Odds: " + horse6odd + "-1.");
+			message.channel.send(horsesemb);
+		}
+
+		}
+	});
 
 client.on("message", (message) => {
   if (message.content.startsWith(prefix + "crime")) {
@@ -1500,6 +1677,259 @@ while (bjactive == true){
 	}
   });
 
+  client.on("message", (message) => {
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	
+	const args = message.content.slice(prefix.length).trim().split(' ');
+	const command = args.shift().toLowerCase();
+	
+	if (command === 'shop') {
+		if (!args.length){
+			message.channel.send("Current available shops!");
+			message.channel.send("```Current available shops:\n\n1. " + shops[0] + "```");
+		} else if(shops.includes(args[0] == true)) {
 
+			
+		}
+		}
+	
+  });
+  //horse race bets command
+  client.on("message", (message) => {
+    if (!message.content.startsWith(prefix) || message.author.bot) return;
+    
+    const args = message.content.slice(prefix.length).trim().split(' ');
+    const command = args.shift().toLowerCase();
+    
+    if (command === 'bethorse') {
+              if(jailed.has(message.author.id)){
+        let jailEmbed = new Discord.MessageEmbed()
+        .setColor('#800000')
+        .setAuthor(message.author.username)
+        .setThumbnail(message.author.avatarURL({ dynamic:true }))
+        .setDescription("You have been jailed, please wait 5 minutes from the jailing to continue");
+        message.channel.send(jailEmbed);
+          } else {
+        if (!args.length) {
+            return message.channel.send(`You didn't provide any bets, ${message.author}! The current available bets are: red, black, dozen1, dozen2, dozen3, even, odd, low, high, column1, column2, and column3.`);
+        }
+    if (totalhorses.includes(args[0])){
+    console.log("bet success");
+    let b = connection.query("SELECT balance FROM economy WHERE ID = ?;", message.author.id, function (err, result, fields){
+        console.log(result); //Shows what result the query is getting
+    if (Object.keys(result).length === 0) {
+              let register ="INSERT INTO economy (ID, Balance, Bank,username) VALUES ('" + message.author.id + "', '0', '0',' " + message.author.username + "');";
+              connection.query(register)
+                                let nullEmbed = new Discord.MessageEmbed()
+        .setColor('#800000')
+        .setAuthor(message.author.username)
+        .setThumbnail(message.author.avatarURL({ dynamic:true }))
+        .setDescription("You do not have an account, one has been opened for you. Unfortunately this means you will not receive the winnings for this round.");
+        
+        message.channel.send(nullEmbed);
+    } else if (args[1] > result[0].balance || args[1] < 0){
+                              let nullEmbed = new Discord.MessageEmbed()
+        .setColor('#800000')
+        .setAuthor(message.author.username)
+        .setThumbnail(message.author.avatarURL({ dynamic:true }))
+        .setDescription("Insufficient Funds, You currently have: " + result[0].balance + "");
+        
+        message.channel.send(nullEmbed);
+    } else if(horsedown.has(message.author.id)){
+		let cooldown = new Discord.MessageEmbed()
+		.setColor('#800000')
+		.setAuthor(message.author.username)
+		.setThumbnail(message.author.avatarURL({ dynamic:true }))
+		.setDescription("Please wait 1 hour before using this command again");
+		message.channel.send(cooldown);
+		  } else {
+		//start of the horse race
+		let addbank = 'UPDATE economy SET Balance = Balance-' + args[1] + ' WHERE ID = ' + message.author.id + '';
+		connection.query(addbank);
+		horsedown.add(message.author.id);
+		setTimeout(() => {
+			// Removes the user from the set after an hour
+			horsedown.delete(message.author.id);
+		  }, 3600000);
+        let horsenumber = args[1];
+        let horsebet = args[0];
+    let horserace = Math.floor(Math.random() * (6-0)) + 0;
+if (horserace == 0){
+	let HorseWonEmbed = new Discord.MessageEmbed()
+	.setColor('#000099')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('And Horse1[' + horse1name + '] has won!\n Reshuffled Horses!');
+	
+	message.channel.send(HorseWonEmbed);
+} else if (horserace == 1){
+	let HorseWonEmbed = new Discord.MessageEmbed()
+	.setColor('#000099')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('And Horse2[' + horse2name + '] has won!\n Reshuffled Horses!');
+	
+	message.channel.send(HorseWonEmbed);
+} else if (horserace == 2) {
+	let HorseWonEmbed = new Discord.MessageEmbed()
+	.setColor('#000099')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('And Horse3[' + horse3name + '] has won!\n Reshuffled Horses!');
+	
+	message.channel.send(HorseWonEmbed);
+} else if (horserace == 3) {
+	let HorseWonEmbed = new Discord.MessageEmbed()
+	.setColor('#000099')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('And Horse4[' + horse4name + '] has won!\n Reshuffled Horses!');
+	
+	message.channel.send(HorseWonEmbed);
+} else if (horserace == 4){
+	let HorseWonEmbed = new Discord.MessageEmbed()
+	.setColor('#008000')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('And Horse5[' + horse5name + '] has won!\n Reshuffled Horses!');
+	
+	message.channel.send(HorseWonEmbed);
+} else if (horserace == 5){
+	let HorseWonEmbed = new Discord.MessageEmbed()
+	.setColor('#000099')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('And Horse6[' + horse6name + '] has won!\n Reshuffled Horses!');
+	
+	message.channel.send(HorseWonEmbed);
+}
+
+//player winning or losing
+if (horserace + 1 == args[0] && args[0] == '1'){
+	let PlayerWonEmbed = new Discord.MessageEmbed()
+	.setColor('#008000')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('You have won ' + (args[1] * horse1odd) + '!');
+	
+	message.channel.send(PlayerWonEmbed);
+	let addbank = 'UPDATE economy SET Balance = Balance+' + (args[1] * horse1odd) + ' WHERE ID = ' + message.author.id + '';
+	connection.query(addbank);
+} else if (args[0] == '1') {
+	let PlayerLostEmbed = new Discord.MessageEmbed()
+	.setColor('#FF0000 ')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('You have lost!');
+	
+	message.channel.send(PlayerLostEmbed);
+}
+if (horserace + 1 == args[0] && args[0] == '2'){
+	let PlayerWonEmbed = new Discord.MessageEmbed()
+	.setColor('#008000')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('You have won ' + (args[1] * horse2odd) + '!');
+	
+	message.channel.send(PlayerWonEmbed);
+	let addbank = 'UPDATE economy SET Balance = Balance+' + (args[1] * horse2odd) + ' WHERE ID = ' + message.author.id + '';
+	connection.query(addbank);
+} else if (args[0] == '2') {
+	let PlayerLostEmbed = new Discord.MessageEmbed()
+	.setColor('#FF0000 ')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('You have lost!');
+	
+	message.channel.send(PlayerLostEmbed);
+}
+
+if (horserace + 1 == args[0] && args[0] == '3'){
+	let PlayerWonEmbed = new Discord.MessageEmbed()
+	.setColor('#008000')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('You have won ' + (args[1] * horse3odd) + '!');
+	
+	message.channel.send(PlayerWonEmbed);
+	let addbank = 'UPDATE economy SET Balance = Balance+' + (args[1] * horse3odd) + ' WHERE ID = ' + message.author.id + '';
+	connection.query(addbank);
+} else if (args[0] == '3') {
+	let PlayerLostEmbed = new Discord.MessageEmbed()
+	.setColor('#FF0000 ')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('You have lost!');
+	
+	message.channel.send(PlayerLostEmbed);
+}
+if (horserace + 1 == args[0] && args[0] == '4'){
+	let PlayerWonEmbed = new Discord.MessageEmbed()
+	.setColor('#008000')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('You have won ' + (args[1] * horse4odd) + '!');
+	
+	message.channel.send(PlayerWonEmbed);
+	let addbank = 'UPDATE economy SET Balance = Balance+' + (args[1] * horse4odd) + ' WHERE ID = ' + message.author.id + '';
+	connection.query(addbank);
+} else if (args[0] == '4') {
+	let PlayerLostEmbed = new Discord.MessageEmbed()
+	.setColor('#FF0000 ')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('You have lost!');
+	
+	message.channel.send(PlayerLostEmbed);
+}
+if (horserace + 1 == args[0] && args[0] == '5'){
+	let PlayerWonEmbed = new Discord.MessageEmbed()
+	.setColor('#008000')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('You have won ' + (args[1] * horse5odd) + '!');
+	
+	message.channel.send(PlayerWonEmbed);
+	let addbank = 'UPDATE economy SET Balance = Balance+' + (args[1] * horse5odd) + ' WHERE ID = ' + message.author.id + '';
+	connection.query(addbank);
+} else if (args[0] == '5') {
+	let PlayerLostEmbed = new Discord.MessageEmbed()
+	.setColor('#FF0000 ')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('You have lost!');
+	
+	message.channel.send(PlayerLostEmbed);
+}
+if (horserace + 1 == args[0] && args[0] == '6'){
+	let PlayerWonEmbed = new Discord.MessageEmbed()
+	.setColor('#008000')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('You have won ' + (args[1] * horse6odd) + '!');
+	
+	message.channel.send(PlayerWonEmbed);
+	let addbank = 'UPDATE economy SET Balance = Balance+' + (args[1] * horse6odd) + ' WHERE ID = ' + message.author.id + '';
+	connection.query(addbank);
+} else if (args[0] == '6') {
+	let PlayerLostEmbed = new Discord.MessageEmbed()
+	.setColor('#FF0000 ')
+	.setAuthor(message.author.username)
+	.setThumbnail(message.author.avatarURL({ dynamic:true }))
+	.setDescription('You have lost!');
+	
+	message.channel.send(PlayerLostEmbed);
+}
+shufflehorses();
+
+
+    
+    }
+    })
+    }	
+    }
+    }
+    });
+ 
 
 client.login(settings.token);

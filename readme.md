@@ -1,5 +1,5 @@
 # Project Alpha
-Project Alpha is a discord economy bot(Latest Discord.js Recommended). As of version 0.2 this bot offers a simple functional economy with the ability to work for money and the ability to do crime(NOT ACTUAL) for money. It also provides a slot machine with a nice payout(MAY SOON TO CHANGE PAYOUT RATE WITH UPCOMING UPDATES). The crime command provides great risk with a payout of 5K and a negative payout of 8K, will you take the risk?(MAY CHANGE).
+Project Alpha is a discord economy bot(Latest Discord.js Recommended). As of version 0.2 this bot offers a simple functional economy with the ability to work for money and the ability to do crime(NOT ACTUAL) for money. It also provides a slot machine with a nice payout(MAY SOON TO CHANGE PAYOUT RATE WITH UPCOMING UPDATES). The crime command provides great risk with a payout of 5K and a negative payout of 8K, will you take the risk?(MAY CHANGE). There is also a decent horse racing bet system, to use it first type !horses and that will show a list of the available horses and their odds(payout). Next you just use !bethorse [1-6] [betamount] so for example !bethorse 3 2500. This means you are betting 2500 euros on horse 3. As of 1.0 I have added some commands which indicate a shop system, however these are just placeholders and are not fully functional in the version. They are meant to be finished in later versions and I just didn't feel like removing them.
 
 ## Installation
 
@@ -75,7 +75,7 @@ Fixed some bugs
 
 Fixed admingive
 
-## Updates (V.0.9)
+## Updates (V.0.9) 30.4.21
 
 Bug Fixes
 
@@ -83,6 +83,15 @@ Fixed give command
 
 Added variable prefix to all commands instead of just some commands
 
+## Updates (V.1.0)22.9.21
+
+Added a horse race system
+
+Added !horses
+
+Added !bethorse [horsenumber] [betamount]
+
+Added placeholders for a soon to come shop system
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
